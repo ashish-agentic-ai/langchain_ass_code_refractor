@@ -11,6 +11,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.tools import tool
 from langchain.agents import create_agent
+from langchain_core.messages import HumanMessage, AIMessage
+
 
 logging.basicConfig(
     level=logging.INFO,format="%(asctime)s [%(levelname)s] %(message)s", handlers=[logging.StreamHandler(sys.stdout)])
