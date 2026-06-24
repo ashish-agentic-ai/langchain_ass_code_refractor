@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.tools import tool
-from langchain_core.messages import HumanMessage
 from langchain.agents import create_agent
 
 logging.basicConfig(
@@ -139,6 +138,22 @@ def run_code_corrector(source_code: str)->str:
 
     final_report = result["messages"][-1].content
 
+    # Append a corrected-code-only block to the final report so users get runnable corrected code.
+    try:
+        corrected_prompt = PromptTemplate(
+            input_variables=["code"],
+            template=("Provide the fully corrected, refactored version of the following code. "
+                      "Return the corrected code, along with a summary of improvements made .\n\nCode:\n{code}\n")
+        )
+
+        formatted_corrected = corrected_prompt.format(code=source_code)
+        corrected_response = llm.invoke(formatted_corrected)
+        corrected_code = corrected_response.content
+
+        final_report = final_report + "\n\nCorrected Code:\n" + corrected_code
+    except Exception:
+        logger.warning("Could not fetch corrected-code block; continuing with original report.")
+
     logger.info("-" * 60)
     logger.info("Agent finished! Here's your refactoring report:")
     logger.info("=" * 60)
@@ -155,7 +170,7 @@ if __name__ == "__main__":
 
     while True:
         user_input = []
-        print("Enter/Paste code. End with a single line containing only 'EOF'.")
+        print("Enter/Paste code. End with a single line containing only 'EOF' and hit Enter.")
         while True:
             line = input()
             if line.strip() == "EOF":
