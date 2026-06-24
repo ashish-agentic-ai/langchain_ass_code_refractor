@@ -1,152 +1,310 @@
-# Email Humanizer - LangChain Single Agent Project
+# Code Refactoring Advisor Agent
 
-A beginner-friendly project that teaches you how to build a **single agent** using **LangChain + OpenAI**. The agent takes a brief email idea and generates a natural, human-sounding email.
+A LangChain-powered AI agent that analyzes source code, detects common code smells, and suggests cleaner, more maintainable refactored versions while preserving the original functionality.
 
-## What You'll Learn
+Built using:
 
-- How LangChain works (LLMs, prompts, tools, agents)
-- How to create tools using the `@tool` decorator
-- How an agent decides which tools to call and in what order
-- How `PromptTemplate` shapes LLM output
-- How the agent's tool-calling loop works (think -> act -> observe -> repeat)
+* Python
+* LangChain
+* OpenAI GPT Models
+* LangChain Tools
+* Agent Tool Calling
 
-## How It Works
+---
 
+# Features
+
+The agent performs two major tasks:
+
+### 1. Detect Code Smells
+
+Identifies common software engineering issues such as:
+
+* Code duplication
+* Long functions
+* Poor naming conventions
+* Deep nesting
+* Magic numbers
+* Missing error handling
+* High complexity
+* Poor maintainability
+
+### 2. Suggest Refactoring
+
+Generates an improved version of the code that:
+
+* Preserves original behavior
+* Improves readability
+* Improves maintainability
+* Reduces complexity
+* Improves naming conventions
+* Removes duplication
+* Adds error handling where appropriate
+
+---
+
+# Architecture
+
+```text
+User Code
+    |
+    v
+LangChain Agent
+    |
+    +---------------------+
+    |                     |
+    v                     v
+detect_code_smells   suggest_refactor
+    |                     |
+    +----------+----------+
+               |
+               v
+      Refactoring Report
 ```
-User's email idea
-       |
-       v
-  [Agent thinks: "I need to draft an email first"]
-       |
-       v
-  [Tool: draft_email] --> creates a formal, structured email
-       |
-       v
-  [Agent thinks: "Now I should humanize this draft"]
-       |
-       v
-  [Tool: humanize_email] --> rewrites it to sound natural and warm
-       |
-       v
-  Final humanized email returned to user
+
+---
+
+# Project Structure
+
+```text
+Code_Refactoring_Advisor_Agent.py
+.env
+README.md
 ```
 
-## Prerequisites
+---
 
-- Python 3.10 or higher
-- An OpenAI API key ([get one here](https://platform.openai.com/api-keys))
+# Installation
 
-## Setup
-
-### 1. Clone the repository
+## 1. Clone Repository
 
 ```bash
-git clone https://github.com/NisargKadam/Langchain_sample_project.git
-cd Langchain_sample_project
+git clone <repository-url>
+cd <repository-folder>
 ```
 
-### 2. Create a virtual environment
+## 2. Create Virtual Environment
+
+### Windows
 
 ```bash
 python -m venv .venv
+.venv\Scripts\activate
 ```
 
-Activate it:
+### Linux / Mac
 
-- **Windows (PowerShell):**
-  ```powershell
-  .venv\Scripts\Activate
-  ```
-- **macOS / Linux:**
-  ```bash
-  source .venv/bin/activate
-  ```
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 
-### 3. Install dependencies
+---
+
+## 3. Install Dependencies
+
+```bash
+pip install -U langchain
+pip install -U langchain-openai
+pip install -U python-dotenv
+```
+
+Or:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set up your API key
+---
 
-Copy the example env file and add your real key:
+# Environment Configuration
+
+Create a `.env` file in the project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+Example:
+
+```env
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+---
+
+# Running the Application
+
+Execute:
 
 ```bash
-cp .env.example .env
+python Code_Refactoring_Advisor_Agent.py
 ```
 
-Open `.env` and replace the placeholder with your actual OpenAI API key:
+You will see:
 
-```
-OPENAI_API_KEY=sk-your-actual-key-here
-```
-
-## Run
-
-```bash
-python email_humanizer.py
-```
-
-You'll see an interactive prompt:
-
-```
+```text
 ============================================================
-  EMAIL HUMANIZER AGENT
-  Powered by LangChain + OpenAI
+CODE REFACTORING ADVISOR AGENT
+Powered by LangChain + OpenAI
 ============================================================
-
-Describe the email you want to write, and the agent will
-create a natural, human-sounding email for you.
-
-Type 'quit' to exit.
-
-Your email idea:
 ```
 
-Type your email idea (e.g., `thank my team for finishing the project on time`) and the agent will generate a humanized email. You'll also see detailed logs showing the agent's reasoning and tool calls.
+Paste your code and finish with:
 
-## Example
-
-**Input:**
-```
-thank my team for finishing the project on time
+```text
+EOF
 ```
 
-**Output:**
-```
-Subject: Huge Thanks for Your Amazing Work on the Project!
+---
 
-Hey Team,
+# Example Input
 
-I hope you're all doing well! I just wanted to take a minute to say a big
-thank you for all the hard work you put into getting the project done on time.
-Your dedication and teamwork really made a difference, and I can't tell you
-how much I appreciate it.
+```python
+def calc(a,b,c):
+    x=10
 
-Each of you brought something special to the table, and I'm so proud to be
-part of such a talented group. Let's keep this momentum going and continue
-to achieve great things together!
-
-Thanks again for everything!
-
-Best,
-[Your Name]
-```
-
-## Project Structure
-
-```
-.
-├── email_humanizer.py   # Main agent code (fully commented)
-├── requirements.txt     # Python dependencies
-├── .env.example         # API key template
-├── .gitignore           # Keeps secrets and venv out of git
-└── README.md            # This file
+    if a>10:
+        if b>5:
+            if c>2:
+                return a*b*c*x
+            else:
+                return 0
+        else:
+            return 0
+    else:
+        return 0
 ```
 
-## Tech Stack
+Type:
 
-- [LangChain](https://python.langchain.com/) - Framework for building LLM applications
-- [OpenAI GPT-4o-mini](https://platform.openai.com/) - The LLM powering the agent
-- [python-dotenv](https://pypi.org/project/python-dotenv/) - Environment variable management
+```text
+EOF
+```
+
+---
+
+# Example Output
+
+## Detected Code Smells
+
+```text
+HIGH
+- Deep nesting
+- Magic number (10)
+- Poor variable naming (x)
+
+MEDIUM
+- Repeated return statements
+- Readability issues
+```
+
+## Suggested Refactoring
+
+```python
+MULTIPLIER = 10
+
+def calc(a, b, c):
+    if a <= 10 or b <= 5 or c <= 2:
+        return 0
+
+    return a * b * c * MULTIPLIER
+```
+
+---
+
+# Agent Workflow
+
+The agent follows the workflow below:
+
+1. User submits source code.
+2. Agent calls `detect_code_smells`.
+3. Tool analyzes the code and identifies issues.
+4. Agent calls `suggest_refactor`.
+5. Tool generates a cleaner implementation.
+6. Agent returns a structured refactoring report.
+
+---
+
+# Tools
+
+## detect_code_smells
+
+### Purpose
+
+Analyze source code and identify maintainability issues.
+
+### Input
+
+```text
+Source Code
+```
+
+### Output
+
+```text
+Prioritized Code Smell Report
+```
+
+---
+
+## suggest_refactor
+
+### Purpose
+
+Generate a cleaner and more maintainable version of the code.
+
+### Input
+
+```text
+Original Source Code
+```
+
+### Output
+
+```text
+Refactored Code
+Improvement Summary
+```
+
+---
+
+# Technologies Used
+
+* Python 3.10+
+* LangChain
+* LangChain OpenAI
+* OpenAI GPT Models
+* Python Dotenv
+* Logging
+
+---
+
+# Sample Use Cases
+
+* Code Review Automation
+* Technical Interview Preparation
+* Developer Productivity Tools
+* AI Coding Assistants
+* Software Quality Analysis
+* Refactoring Recommendations
+
+---
+
+# Future Enhancements
+
+* AST-based code analysis
+* Support for multiple programming languages
+* Unit test generation
+* Security vulnerability detection
+* Code complexity scoring
+* GitHub integration
+* Export reports as PDF or Markdown
+
+---
+
+# Author
+
+Code Refactoring Advisor Agent
+
+Built using LangChain and OpenAI.
