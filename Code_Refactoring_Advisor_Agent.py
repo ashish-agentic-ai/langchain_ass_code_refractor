@@ -1,8 +1,10 @@
 """===========================================================================
 Code Refactoring Advisor Agent
 This agent analyzes code, detects smells, and suggests refactorings.
-Built with LangChain + OpenAI GPT (langchain-openai 1.3.3).
+Built with LangChain and OpenAI GPT 
 ==========================================================================="""
+# Importing Lib's
+
 import logging
 import sys
 import os
@@ -13,11 +15,13 @@ from langchain_core.tools import tool
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage
 
+# Initiating Logging
 
 logging.basicConfig(
     level=logging.INFO,format="%(asctime)s [%(levelname)s] %(message)s", handlers=[logging.StreamHandler(sys.stdout)])
 logger = logging.getLogger("CodeRefactoringAdvisor")    
 
+# Loading Environment Variables
 load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
@@ -29,6 +33,7 @@ logger.info("API key loaded successfully")
 logger.info("All LangChain components imported")
 logger.info("Initializing the LLM (OpenAI GPT)...")
 
+# Declaring LLM details
 llm = ChatOpenAI(
     model="gpt-4.1-mini",
     temperature=0.6,
@@ -38,6 +43,7 @@ llm = ChatOpenAI(
 logger.info("LLM initialized: model=gpt-4.1-mini, temperature=0.6")
 logger.info("Defining agent tools...")
 
+# Defining TOOL for Detecting Code smells 
 @tool
 def detect_code_smells(code:str)-> str:
     """Detects code smells and then suggest cleaner refactored versions of the code."""
@@ -66,6 +72,8 @@ def detect_code_smells(code:str)-> str:
 
     logger.info(f"[Tool: detect_code_smells] LLM response received.")
     return response.content
+
+# Defining TOOL for refractoring Code isseus which are detected by code_smell. 
 @tool
 def suggest_refactor(code:str)->str:
     """Suggests refactorings for the provided code. which rewrites the code to be cleaner, more maintainable, and more efficient way."""
@@ -102,6 +110,7 @@ logger.info("Agent tools defined successfully.")
 
 logger.info("Creating the agent...")
 
+#Providing  PROMPT
 SYSTEM_PROMPT = """You are a code refactoring advisor agent. Your job is to analyze code, detect code smells, and suggest cleaner refactored versions of the code. You should provide structured responses that include the detected code smells and the suggested refactorings. Ensure that the refactored code preserves the original behavior while improving readability, maintainability, and efficiency.
 
 When user provides code, follow these steps:
@@ -110,6 +119,7 @@ When user provides code, follow these steps:
 3. Return the final structured response to the user, including both the detected code smells and the suggested refactorings.
 Use both tools in sequence to provide a comprehensive analysis and refactoring suggestions for the provided code."""
 
+#Creatiung an Agent
 code_corrector = create_agent(
     model=llm,
     tools=tools,
@@ -118,6 +128,7 @@ code_corrector = create_agent(
 )
 logger.info("Agent created and ready to run!")
 
+# Execution Function for running Agent.
 def run_code_corrector(source_code: str)->str:
     """
     Main function to run code refactor advisor.
