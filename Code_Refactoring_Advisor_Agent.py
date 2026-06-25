@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     while True:
         user_input = []
-        print("Enter/Paste code. End with a single line containing only 'EOF' and hit Enter.")
+        print("Enter/Paste code. End with a single line containing only 'EOF' and hit Enter and if Wish to EXIT, only type EOF and Hit Enter")
         while True:
             line = input()
             if line.strip() == "EOF":
